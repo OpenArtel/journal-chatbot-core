@@ -6,10 +6,7 @@
 	"scripts": {
 		"start": "bun run src/index.ts",
 		"dev": "bun run --watch src/index.ts",
-		"dev:container": "nodemon --watch src --ext tsx,ts,js,html,css --exec 'bun src/index.ts'",
-		"lint": "biome check .",
-		"lint:fix": "biome check --apply .",
-		"format": "biome format . --fix"
+		"dev:container": "nodemon --watch src --ext tsx,ts,js,html,css --exec 'bun src/index.ts'"
 	},
 	"devDependencies": {
 		"@types/bun": "latest"
@@ -18,6 +15,8 @@
 		"typescript": "^5"
 	},
 	"dependencies": {
+		"@grammyjs/ratelimiter": "^1.2.1",
+		"@mastra/client-js": "^0.16.15",
 		"grammy": "^1.38.4",
 		"zod": "^4.1.13"
 	}

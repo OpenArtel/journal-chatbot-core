@@ -3,6 +3,7 @@ import { z } from 'zod'
 const envSchema = z.object({
 	// PORT: z.coerce.number().int().positive(),
 	BOT_TOKEN: z.string().min(1),
+	MASTRA_URL: z.string().min(1),
 })
 
 export type Env = z.infer<typeof envSchema>
