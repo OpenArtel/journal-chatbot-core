@@ -1,24 +1,13 @@
 {
-	"name": "journal-chatbot-core",
-	"module": "index.ts",
-	"type": "module",
-	"private": true,
-	"scripts": {
-		"start": "bun run src/index.ts",
-		"dev": "bun run --watch src/index.ts",
-		"dev:container": "nodemon --watch src --ext tsx,ts,js,html,css --exec 'bun src/index.ts'",
-		"lint": "biome check .",
-		"lint:fix": "biome check --apply .",
-		"format": "biome format . --fix"
-	},
-	"devDependencies": {
-		"@types/bun": "latest"
-	},
-	"peerDependencies": {
-		"typescript": "^5"
-	},
-	"dependencies": {
-		"grammy": "^1.38.4",
-		"zod": "^4.1.13"
-	}
+  "name": "journal-chatbot-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm -r dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.22.0"
 }
