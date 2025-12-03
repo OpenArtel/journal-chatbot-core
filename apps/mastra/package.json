@@ -22,6 +22,7 @@
 		"@mastra/libsql": "^0.16.3",
 		"@mastra/loggers": "^0.10.19",
 		"@mastra/memory": "^0.15.12",
+		"@mastra/pg": "^0.17.9",
 		"@openrouter/ai-sdk-provider": "^1.2.8",
 		"zod": "^4.1.13"
 	},

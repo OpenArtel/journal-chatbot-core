@@ -1,5 +1,5 @@
 import { MastraClient } from '@mastra/client-js'
-import { env } from './utils/parse-env'
+import { env } from '../utils/parse-env'
 
 // GMT+0 UTC
 const threadId = new Date().toISOString().split('T')[0]

@@ -1,5 +1,5 @@
 import { MastraClient } from '@mastra/client-js'
-import { env } from './utils/parse-env'
+import { env } from '../utils/parse-env'
 
 export async function clearCurrentDay() {
 	const threadId = new Date().toISOString().split('T')[0] // GMT+0 UTC

@@ -1,0 +1,15 @@
+# syntax=docker/dockerfile:1.6
+
+FROM oven/bun:1
+
+ARG FOLDER=/apps/bot
+
+WORKDIR /app
+COPY ${FOLDER}/package.json ${FOLDER}/bun.lock ./
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install
+
+
+RUN bun install -g nodemon
+
+CMD ["bun", "run", "dev:container"]

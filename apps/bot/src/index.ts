@@ -1,27 +1,17 @@
-import { GrammyError, HttpError } from 'grammy'
-import { bot } from './bot'
+import { bot } from './bot/bot'
+import { migrateToLatest } from './infra/migrate'
 
-bot.start()
-console.log('Start bot')
+async function main() {
+	console.log('\n\n\n')
 
-bot.catch(async (err) => {
-	const ctx = err.ctx
-	const e = err.error
+	await migrateToLatest()
 
-	console.error(`Ошибка при обработке update ${ctx.update.update_id}:`, e)
+	bot.start({
+		drop_pending_updates: true,
+		onStart: ({ username }) => {
+			console.log(`[grammy] Bot @${username} started without backlog`)
+		},
+	})
+}
 
-	try {
-		if (e instanceof GrammyError) {
-			console.error('Ошибка Telegram API:', e.description)
-		} else if (e instanceof HttpError) {
-			console.error('Ошибка сети:', e)
-		} else {
-			console.error('Неизвестная ошибка:', e)
-			await ctx.reply(
-				'Упс, что-то пошло не так. Попробуйте еще раз через минуту',
-			)
-		}
-	} catch (notifyErr) {
-		console.error('Не удалось уведомить пользователя об ошибке:', notifyErr)
-	}
-})
+main()
