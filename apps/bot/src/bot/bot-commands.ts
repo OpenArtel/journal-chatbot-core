@@ -1,7 +1,8 @@
 import type { Bot } from 'grammy'
-import { boss } from '../infra/queue/pg-boss'
-import { queues } from '../infra/queue/queues'
+
 import { clearCurrentDay } from './clear-current-day'
+import { conversationSummaryJob } from './conversation-summary'
+import { conversationSummaryAggregatorJob } from './conversations-summary-aggregator'
 import { generateAssistantResponse } from './generate-assistant-response'
 
 export const knownCommands = ['start', 'clear_day']
@@ -22,7 +23,7 @@ export async function registerBotCommands(bot: Bot) {
 		if (!ctx.message) return
 
 		const text = 'Привет, расскажи зачем ты здесь и что ты умеешь'
-		const userId = ctx.message.from.id
+		const userId = ctx.from.id
 
 		await ctx.replyWithChatAction('typing')
 
@@ -32,7 +33,10 @@ export async function registerBotCommands(bot: Bot) {
 	})
 
 	bot.command('clear_day', async (ctx) => {
-		const result = await clearCurrentDay()
+		if (!ctx.from) return
+
+		const userId = ctx.from.id
+		const result = await clearCurrentDay(userId)
 
 		await ctx.reply(result)
 	})
@@ -40,12 +44,18 @@ export async function registerBotCommands(bot: Bot) {
 	bot.command('day_summary', async (ctx) => {
 		if (!ctx.from) return
 
-		boss.send(queues.dailySummary, {
-			userId: ctx.from.id,
-		})
+		await conversationSummaryJob.emit({ userId: ctx.from.id, date: new Date() })
 
 		await ctx.replyWithChatAction('typing')
 
-		ctx.reply('Подождите, итоги дня генерируются...')
+		ctx.reply('Подождите, подвожу итоги дня...')
+	})
+
+	bot.command('test', async (ctx) => {
+		if (!ctx.from) return
+
+		console.log('start test command')
+
+		conversationSummaryAggregatorJob.emit({})
 	})
 }

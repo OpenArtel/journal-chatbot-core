@@ -11,6 +11,7 @@ const envSchema = z.object({
 	POSTGRES_PASSWORD: z.string().min(1),
 	POSTGRES_PORT: z.coerce.number().min(1),
 	POSTGRES_DB: z.string().min(1),
+	DATABASE_URL: z.string().min(1),
 })
 
 export type Env = z.infer<typeof envSchema>

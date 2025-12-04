@@ -1,13 +1,26 @@
+import { PgBoss } from 'pg-boss'
 import { bot } from './bot/bot'
+import { conversationSummaryJob } from './bot/conversation-summary'
+import { conversationSummaryAggregatorJob } from './bot/conversations-summary-aggregator'
+import { pingDatabase } from './infra/database/db'
 import { migrateToLatest } from './infra/database/migrate'
-import { initPgBoss, stopPgBoss } from './infra/queue/pg-boss'
+import { JobManager } from './infra/queue/pg-boss'
+import { env } from './utils/parse-env'
 
 async function main() {
 	console.log('\n\n\n')
 
+	await pingDatabase()
+
 	await migrateToLatest()
 
-	await initPgBoss().catch(console.error)
+	const boss = new PgBoss(env.DATABASE_URL)
+	const jobs = new JobManager(boss).register(
+		conversationSummaryJob,
+		conversationSummaryAggregatorJob,
+	)
+
+	await jobs.start()
 
 	bot.start({
 		drop_pending_updates: true,
@@ -17,7 +30,7 @@ async function main() {
 	})
 
 	process.on('SIGTERM', async () => {
-		await stopPgBoss()
+		// await stopPgBoss()
 		process.exit(0)
 	})
 }

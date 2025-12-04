@@ -1,15 +1,16 @@
 import { MastraClient } from '@mastra/client-js'
+import { getThreadId } from '../utils/get-thread-id'
 import { env } from '../utils/parse-env'
 
-export async function clearCurrentDay() {
-	const threadId = new Date().toISOString().split('T')[0] // GMT+0 UTC
-	if (!threadId) return 'Ошибка. Попробуйте позже'
-
+export async function clearCurrentDay(userId: number) {
 	const mastraClient = new MastraClient({
 		baseUrl: env.MASTRA_URL,
 	})
 
-	const thread = mastraClient.getMemoryThread(threadId, 'assistantAgent')
+	const thread = mastraClient.getMemoryThread(
+		getThreadId(userId),
+		'assistantAgent',
+	)
 
 	const { result } = await thread.delete()
 

@@ -1,6 +1,6 @@
-import { Kysely, PostgresDialect } from 'kysely'
-import type { DB as GeneratedDB } from 'kysely-codegen'
+import { Kysely, PostgresDialect, sql } from 'kysely'
 import { Pool } from 'pg'
+import type { DB as GeneratedDB } from './generated'
 
 const dialect = new PostgresDialect({
 	pool: new Pool({
@@ -16,3 +16,19 @@ const dialect = new PostgresDialect({
 export const db = new Kysely<GeneratedDB>({
 	dialect,
 })
+
+export async function pingDatabase() {
+	try {
+		const result = await db
+			// @ts-expect-error Корректная системная таблица
+			.selectFrom('pg_database')
+			// @ts-expect-error
+			.select([sql`NOW()`.as('current_time')])
+			.limit(1)
+			.execute()
+
+		console.log('[db] Current time:', result[0]?.current_time)
+	} catch (error) {
+		console.error('[db] Failed database:', error)
+	}
+}

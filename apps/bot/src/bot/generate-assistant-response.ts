@@ -1,8 +1,6 @@
 import { MastraClient } from '@mastra/client-js'
+import { getThreadId } from '../utils/get-thread-id'
 import { env } from '../utils/parse-env'
-
-// GMT+0 UTC
-const threadId = new Date().toISOString().split('T')[0]
 
 export async function generateAssistantResponse(
 	message: string,
@@ -21,7 +19,7 @@ export async function generateAssistantResponse(
 				content: message,
 			},
 		],
-		threadId: threadId,
+		threadId: getThreadId(userId),
 		resourceId: userId.toString(),
 	})
 

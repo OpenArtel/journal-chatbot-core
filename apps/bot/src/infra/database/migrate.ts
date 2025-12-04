@@ -1,5 +1,3 @@
-// migrate.ts
-
 import { promises as fs } from 'node:fs'
 import * as path from 'node:path'
 import { FileMigrationProvider, Migrator } from 'kysely'
@@ -46,6 +44,4 @@ export async function migrateToLatest() {
 	if (!error && results?.length === 0) {
 		console.log('[migrate] No migrations found')
 	}
-
-	await db.destroy()
 }
