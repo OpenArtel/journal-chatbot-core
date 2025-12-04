@@ -18,7 +18,9 @@
 			"recommended": true,
 			"correctness": {
 				"noUnusedImports": "info",
-				"noUnusedVariables": "info"
+				"noUnusedVariables": "info",
+				"noUnusedFunctionParameters": "info"
+
 			}
 		}
 	},

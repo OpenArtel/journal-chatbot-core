@@ -1,25 +1,10 @@
 import { Bot, GrammyError, HttpError } from 'grammy'
 import { env } from '../utils/parse-env'
-import { clearCurrentDay } from './clear-current-day'
+import { registerBotCommands } from './bot-commands'
 import { generateAssistantResponse } from './generate-assistant-response'
 
 export const bot = new Bot(env.BOT_TOKEN)
-
-export const knownCommands = ['start', 'clear_day']
-await bot.api.setMyCommands([
-	{
-		command: 'clear_day',
-		description: 'Очистить на сервере сообщения за этот день',
-	},
-])
-
-bot.command('start', (ctx) => ctx.reply('Добро пожаловать'))
-
-bot.command('clear_day', async (ctx) => {
-	const result = await clearCurrentDay()
-
-	await ctx.reply(result)
-})
+await registerBotCommands(bot)
 
 bot.on(':text', async (ctx) => {
 	if (!ctx.message) return

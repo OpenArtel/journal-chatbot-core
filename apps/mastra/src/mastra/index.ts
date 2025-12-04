@@ -2,14 +2,17 @@ import { Mastra } from '@mastra/core/mastra'
 import { LibSQLStore } from '@mastra/libsql'
 import { PinoLogger } from '@mastra/loggers'
 import { assistantAgent } from './agents/assistant-agent'
+import { conversationSummaryAgent } from './agents/conversation-summary-agent'
 import {
 	completenessScorer,
 	toolCallAppropriatenessScorer,
 	translationScorer,
 } from './scorers/weather-scorer'
+import { conversationSummaryWorkflow } from './workflows/conversation-summary-workflow'
 
 export const mastra = new Mastra({
-	agents: { assistantAgent },
+	agents: { assistantAgent, conversationSummaryAgent },
+	workflows: { conversationSummaryWorkflow },
 	scorers: {
 		toolCallAppropriatenessScorer,
 		completenessScorer,

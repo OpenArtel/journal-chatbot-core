@@ -1,5 +1,6 @@
 import { limit } from '@grammyjs/ratelimiter'
-import { bot, knownCommands } from './bot'
+import { bot } from './bot'
+import { knownCommands } from './bot-commands'
 
 bot.use(
 	limit({
