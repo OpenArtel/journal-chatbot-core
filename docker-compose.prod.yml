@@ -33,13 +33,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    user: postgres
     restart: unless-stopped
 
 volumes:
   postgres-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /mnt/nvme-netac/data/openartel/journal-chatbot
