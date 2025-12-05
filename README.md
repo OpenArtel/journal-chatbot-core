@@ -1,3 +1,1 @@
 # journal-chatbot-core
-
-Журнал
