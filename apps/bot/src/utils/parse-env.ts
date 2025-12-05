@@ -1,6 +1,8 @@
 import { z } from 'zod'
 
 const envSchema = z.object({
+	NODE_ENV: z.enum(['development', 'production']),
+
 	OPENROUTER_API_KEY: z.string().min(1),
 
 	BOT_TOKEN: z.string().min(1),

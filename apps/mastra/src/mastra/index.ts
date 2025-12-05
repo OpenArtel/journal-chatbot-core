@@ -11,6 +11,7 @@ import {
 import { conversationSummaryWorkflow } from './workflows/conversation-summary-workflow'
 
 export const mastra = new Mastra({
+	server: { port: Number(process.env.MASTRA_PORT) || 3000, host: '0.0.0.0' },
 	agents: { assistantAgent, conversationSummaryAgent },
 	workflows: { conversationSummaryWorkflow },
 	scorers: {

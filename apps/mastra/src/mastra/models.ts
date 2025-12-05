@@ -10,7 +10,7 @@ export const llama8 = openrouter('meta-llama/llama-3.1-8b-instruct', {
 		max_tokens: 256,
 	},
 	provider: {
-		only: ['deepinfra/turbo'],
+		sort: 'price',
 	},
 })
 
@@ -21,7 +21,7 @@ export const llama8withoutMaxTokens = openrouter(
 			temperature: 0,
 		},
 		provider: {
-			only: ['deepinfra/turbo'],
+			sort: 'price',
 		},
 	},
 )
