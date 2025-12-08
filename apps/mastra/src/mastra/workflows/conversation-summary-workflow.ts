@@ -10,7 +10,7 @@ const outputSchema = z.object({
 	summary: z.string(),
 })
 
-const messageSchema = z.object({
+const baseMessageSchema = z.object({
 	role: z.enum(['user', 'assistant', 'system']),
 	id: z.string(),
 	createdAt: z.string(),
@@ -19,6 +19,35 @@ const messageSchema = z.object({
 	type: z.string(),
 	content: z.string(),
 })
+
+const userMessageSchema = baseMessageSchema.extend({
+	role: z.literal('user'),
+	content: z.string(),
+})
+
+const systemMessageSchema = baseMessageSchema.extend({
+	role: z.literal('system'),
+	content: z.string(),
+})
+
+export const assistantBlockSchema = z.object({
+	type: z.enum(['text', 'reasoning']),
+	text: z.string(),
+	providerMetadata: z.any(),
+})
+
+const assistantMessageSchema = baseMessageSchema.extend({
+	role: z.literal('assistant'),
+	content: z.array(assistantBlockSchema),
+	// опционально, если хочешь отдельное поле под reasoning в другой модели данных
+	providerMetadata: z.string().optional(),
+})
+
+export const messageSchema = z.discriminatedUnion('role', [
+	userMessageSchema,
+	systemMessageSchema,
+	assistantMessageSchema,
+])
 
 type Message = z.infer<typeof messageSchema>
 
@@ -60,7 +89,9 @@ const summary = createStep({
 		const agent = mastra.getAgent('conversationSummaryAgent')
 
 		const clearMessages = inputData.messages.map((message) => {
-			return `${message.role}: ${message.content}`
+			if (message.role !== 'user') return null
+
+			return message.content
 		})
 
 		// TODO: добавить обработку если сообщения не помещаются в контекстное окно
@@ -68,7 +99,7 @@ const summary = createStep({
 			{
 				role: 'user',
 				content: `
-				ОБРАБОТАЙ ЭТУ ПЕРЕПИСКУ:
+				ОБРАБОТАЙ ЭТИ СООБЩЕНИЯ ПОЛЬЗОВАТЕЛЯ:
 				${clearMessages.join('\n')}
 				`,
 			},

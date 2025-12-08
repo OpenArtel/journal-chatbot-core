@@ -1,6 +1,6 @@
 import { Agent } from '@mastra/core/agent'
 import { Memory } from '@mastra/memory'
-import { llama8, llama8withoutMaxTokens } from '../models'
+import { gptOss120 } from '../models'
 
 export const conversationSummaryAgent = new Agent({
 	name: 'Conversation Summary Agent',
@@ -13,14 +13,14 @@ export const conversationSummaryAgent = new Agent({
 	БЕЗ РЕКОМЕНДАЦИЙ И СОВЕТОВ И ПРИМЕЧАНИЙ
 
 	Формат:
-	1. Описание пользователя
+	1. Описание состояния пользователя
 	2. Темы, заботы и переживания
 `,
-	model: llama8withoutMaxTokens,
+	model: gptOss120({ temperature: 0, max_tokens: 0 }),
 	tools: {},
 	memory: new Memory({
 		options: {
-			lastMessages: 0,
+			lastMessages: false,
 			threads: {
 				generateTitle: false,
 			},
