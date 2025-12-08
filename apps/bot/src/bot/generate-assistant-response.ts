@@ -23,5 +23,7 @@ export async function generateAssistantResponse(
 		resourceId: userId.toString(),
 	})
 
-	return response.text
+	const formatedAnswer = response.text.replace(/\*\*/g, '').replace(/\*/g, '')
+
+	return formatedAnswer
 }
