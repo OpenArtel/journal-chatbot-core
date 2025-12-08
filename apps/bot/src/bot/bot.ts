@@ -1,18 +1,24 @@
-import { Bot, GrammyError, HttpError } from 'grammy'
+import type { AutoChatActionFlavor } from '@grammyjs/auto-chat-action'
+import { Bot, type Context, GrammyError, HttpError } from 'grammy'
 import { env } from '../utils/parse-env'
 import { registerBotCommands } from './bot-commands'
+import { registerBotMiddleware } from './bot-middleware'
 import { generateAssistantResponse } from './generate-assistant-response'
 
-export const bot = new Bot(env.BOT_TOKEN)
+export type MyContext = Context & AutoChatActionFlavor
+
+export const bot = new Bot<MyContext>(env.BOT_TOKEN)
+
+await registerBotMiddleware(bot)
 await registerBotCommands(bot)
 
 bot.on(':text', async (ctx) => {
+	ctx.chatAction = 'typing'
+
 	if (!ctx.message) return
 
 	const text = ctx.message.text
 	const userId = ctx.message.from.id
-
-	await ctx.replyWithChatAction('typing')
 
 	const answer = await generateAssistantResponse(text, userId)
 

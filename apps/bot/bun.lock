@@ -5,6 +5,7 @@
     "": {
       "name": "journal-chatbot-core",
       "dependencies": {
+        "@grammyjs/auto-chat-action": "^0.1.1",
         "@grammyjs/ratelimiter": "^1.2.1",
         "@mastra/client-js": "^0.16.15",
         "grammy": "^1.38.4",
@@ -58,6 +59,8 @@
     "@babel/code-frame": ["@babel/code-frame@7.27.1", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.27.1", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-cjQ7ZlQ0Mv3b47hABuTevyTuYN4i+loJKGeV9flcCgIK37cCXRh+L1bd3iBHlynerhQ7BhCkn2BPbQUL+rGqFg=="],
 
     "@babel/helper-validator-identifier": ["@babel/helper-validator-identifier@7.28.5", "", {}, "sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q=="],
+
+    "@grammyjs/auto-chat-action": ["@grammyjs/auto-chat-action@0.1.1", "", { "peerDependencies": { "grammy": "^1.0.0" } }, "sha512-70Jdy+keIri4452tluaZpKtHag5gD8pNczoXqajsnsx7pJC5wg3DAQ5unpt0xJb8KsVBAGWuJb298SBl3TVecg=="],
 
     "@grammyjs/ratelimiter": ["@grammyjs/ratelimiter@1.2.1", "", {}, "sha512-4bmVUBCBnIb2epbDiBLCvvnVjaYg7kDCPR1Ptt6gqoxm5vlD8BjainYv+yjF6221hu2KUv8QAckumDI+6xyGsQ=="],
 

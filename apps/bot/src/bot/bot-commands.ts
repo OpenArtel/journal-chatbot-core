@@ -1,13 +1,12 @@
 import type { Bot } from 'grammy'
-
+import type { MyContext } from './bot'
 import { clearCurrentDay } from './clear-current-day'
 import { conversationSummaryJob } from './conversation-summary'
-import { conversationSummaryAggregatorJob } from './conversations-summary-aggregator'
-import { generateAssistantResponse } from './generate-assistant-response'
+import { startCommand } from './start-command'
 
-export const knownCommands = ['start', 'clear_day']
+export const knownCommands = ['start', 'clear_day', 'day_summary']
 
-export async function registerBotCommands(bot: Bot) {
+export async function registerBotCommands(bot: Bot<MyContext>) {
 	await bot.api.setMyCommands([
 		{
 			command: 'clear_day',
@@ -21,13 +20,11 @@ export async function registerBotCommands(bot: Bot) {
 
 	bot.command('start', async (ctx) => {
 		if (!ctx.message) return
+		ctx.chatAction = 'typing'
 
-		const text = 'Привет, расскажи зачем ты здесь и что ты умеешь'
 		const userId = ctx.from.id
 
-		await ctx.replyWithChatAction('typing')
-
-		const answer = await generateAssistantResponse(text, userId)
+		const answer = await startCommand(userId)
 
 		await ctx.reply(answer)
 	})
@@ -43,10 +40,9 @@ export async function registerBotCommands(bot: Bot) {
 
 	bot.command('day_summary', async (ctx) => {
 		if (!ctx.from) return
+		ctx.chatAction = 'typing'
 
 		await conversationSummaryJob.emit({ userId: ctx.from.id, date: new Date() })
-
-		await ctx.replyWithChatAction('typing')
 
 		ctx.reply('Подождите, подвожу итоги дня...')
 	})
@@ -55,7 +51,5 @@ export async function registerBotCommands(bot: Bot) {
 		if (!ctx.from) return
 
 		console.log('start test command')
-
-		conversationSummaryAggregatorJob.emit({})
 	})
 }
