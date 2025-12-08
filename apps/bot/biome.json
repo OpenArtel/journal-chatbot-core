@@ -1,0 +1,19 @@
+{
+  "root": false,
+  "extends": "//",
+  "linter": {
+    "enabled": true
+  },
+  "overrides": [
+    {
+      "includes": ["infra/database/migrations/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}
