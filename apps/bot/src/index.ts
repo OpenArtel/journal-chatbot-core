@@ -1,16 +1,19 @@
 import { PgBoss } from 'pg-boss'
+import { pingDatabase } from '../infra/database/db'
+import { generateTypes } from '../infra/database/generate-type'
+import { migrateToLatest } from '../infra/database/migrate'
+import { JobManager } from '../infra/queue/pg-boss'
 import { bot } from './bot/bot'
 import { conversationSummaryJob } from './bot/conversation-summary'
 import { conversationSummaryAggregatorJob } from './bot/conversations-summary-aggregator'
-import { pingDatabase } from './infra/database/db'
-import { migrateToLatest } from './infra/database/migrate'
-import { JobManager } from './infra/queue/pg-boss'
 import { env } from './utils/parse-env'
 
 async function main() {
 	console.log('\n\n\n')
 
 	await pingDatabase()
+
+	await generateTypes()
 
 	await migrateToLatest()
 
@@ -21,6 +24,8 @@ async function main() {
 	)
 
 	await jobs.start()
+
+	await conversationSummaryAggregatorJob.schedule({}, '0 0 * * *')
 
 	bot.start({
 		drop_pending_updates: true,

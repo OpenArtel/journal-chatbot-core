@@ -1,11 +1,10 @@
 import { MastraClient } from '@mastra/client-js'
 import z from 'zod'
-import { defineJob } from '../infra/queue/pg-boss'
+import { db } from '../../infra/database/db'
+import { defineJob } from '../../infra/queue/pg-boss'
 import { getThreadId } from '../utils/get-thread-id'
 import { env } from '../utils/parse-env'
 import { bot } from './bot'
-
-// await conversationSummaryJob.schedule({ email: "user@example.com" }, "0 0 * * *")
 
 export const conversationSummaryJob = defineJob('conversation_summary')
 	.input(z.object({ userId: z.number(), date: z.date() }))
@@ -30,7 +29,7 @@ export const conversationSummaryJob = defineJob('conversation_summary')
 		}
 	})
 
-async function runWorkflow(userId: number | string, date?: Date) {
+async function runWorkflow(userId: number | string, date: Date) {
 	const mastraClient = new MastraClient({
 		baseUrl: env.MASTRA_URL,
 	})
@@ -45,9 +44,18 @@ async function runWorkflow(userId: number | string, date?: Date) {
 		},
 	})
 
-	if (answer.status !== 'success') {
+	if (answer.status !== 'success' || !answer.result.summary) {
 		throw new Error('Workflow failed')
 	}
+
+	db.insertInto('daily_summary')
+		.values({
+			id: answer.result.id,
+			user_id: `${userId}`,
+			summary_date: date,
+			summary: answer.result.summary,
+		})
+		.execute()
 
 	return answer.result.summary
 }

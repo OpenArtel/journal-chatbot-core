@@ -1,5 +1,5 @@
-import { db } from '../infra/database/db'
-import { defineJob } from '../infra/queue/pg-boss'
+import { db } from '../../infra/database/db'
+import { defineJob } from '../../infra/queue/pg-boss'
 import { conversationSummaryJob } from './conversation-summary'
 
 export const conversationSummaryAggregatorJob = defineJob(
@@ -10,7 +10,6 @@ export const conversationSummaryAggregatorJob = defineJob(
 		if (!job) throw new Error('No job data provided')
 
 		// UTC 0
-
 		const todayDateStr = new Date().toISOString().split('T')[0] as string
 		const today = new Date(todayDateStr)
 
@@ -33,5 +32,3 @@ export const conversationSummaryAggregatorJob = defineJob(
 			})
 		}
 	})
-
-// await conversationSummaryAggregatorJob.schedule({}, '0 0 * * *')
