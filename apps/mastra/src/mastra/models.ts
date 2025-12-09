@@ -30,4 +30,7 @@ export const gptOss120 = (extraBody?: object) =>
 		provider: {
 			sort: 'price',
 		},
+		reasoning: {
+			effort: 'low',
+		},
 	})

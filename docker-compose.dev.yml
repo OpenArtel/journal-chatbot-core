@@ -5,8 +5,13 @@ services:
     build:
       context: .
       dockerfile: ./apps/bot/Dockerfile.dev
+    depends_on:
+      mastra:
+        condition: service_started
+      postgres:
+        condition: service_healthy
     volumes:
-      - ./apps/bot/src:/app/src
+      - ./apps/bot:/app
       # Exclude node_modules to avoid conflicts
       - /app/node_modules
     environment:
@@ -20,6 +25,9 @@ services:
     build:
       context: .
       dockerfile: ./apps/mastra/Dockerfile.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
     volumes:
       - ./apps/mastra/src:/app/src
       # Exclude node_modules to avoid conflicts
@@ -35,9 +43,9 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: 'postgres:17-alpine'
+    image: 'pgvector/pgvector:pg18-trixie'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     env_file:
       - .env
     ports:

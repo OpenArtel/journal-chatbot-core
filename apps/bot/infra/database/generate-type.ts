@@ -1,6 +1,9 @@
 import { spawn } from 'bun'
+import { isDev } from '../../src/utils/is-dev'
 
 export async function generateTypes() {
+	if (!isDev) return
+
 	console.log('[kysely-codegen] 🔄 Generating types...')
 
 	const proc = spawn(['bun', 'run', 'kysely:generate'], {

@@ -21,7 +21,8 @@ services:
       context: .
       dockerfile: ./apps/mastra/Dockerfile
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file:
       - .env
     networks:
@@ -29,9 +30,9 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: 'postgres:17-alpine'
+    image: 'pgvector/pgvector:pg18-trixie'
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql
     env_file:
       - .env
     networks:
