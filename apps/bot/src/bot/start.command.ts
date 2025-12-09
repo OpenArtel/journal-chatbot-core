@@ -1,7 +1,24 @@
+import type { Bot } from 'grammy'
 import { db } from '../../infra/database/db'
+import type { MyContext } from './bot'
 import { generateAssistantResponse } from './generate-assistant-response'
 
-export async function startCommand(userId: number) {
+export const START_COMMAND_NAME = 'start'
+
+export async function startCommand(bot: Bot<MyContext>) {
+	bot.command(START_COMMAND_NAME, async (ctx) => {
+		if (!ctx.message) return
+		ctx.chatAction = 'typing'
+
+		const userId = ctx.from.id
+
+		const answer = await run(userId)
+
+		await ctx.reply(answer)
+	})
+}
+
+async function run(userId: number) {
 	const userIdStr = userId.toString()
 
 	const { isNewUser } = await db.transaction().execute(async (trx) => {

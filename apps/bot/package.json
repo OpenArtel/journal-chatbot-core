@@ -21,6 +21,7 @@
 		"@grammyjs/auto-chat-action": "^0.1.1",
 		"@grammyjs/ratelimiter": "^1.2.1",
 		"@mastra/client-js": "^0.16.15",
+		"date-fns": "^4.1.0",
 		"grammy": "^1.38.4",
 		"kysely": "^0.28.8",
 		"pg": "^8.16.3",

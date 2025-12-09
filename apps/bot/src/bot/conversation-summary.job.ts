@@ -37,10 +37,13 @@ async function runWorkflow(userId: number | string, date: Date) {
 	const workflow = mastraClient.getWorkflow('conversationSummaryWorkflow')
 	const response = await workflow.createRunAsync()
 
+	const threadId = getThreadId(userId, date)
+	const resourceId = String(userId)
+
 	const answer = await response.startAsync({
 		inputData: {
-			threadId: getThreadId(userId, date),
-			resourceId: String(userId),
+			threadId: threadId,
+			resourceId: resourceId,
 		},
 	})
 
@@ -48,7 +51,8 @@ async function runWorkflow(userId: number | string, date: Date) {
 		throw new Error('Workflow failed')
 	}
 
-	db.insertInto('daily_summary')
+	await db
+		.insertInto('daily_summary')
 		.values({
 			id: answer.result.id,
 			user_id: `${userId}`,
@@ -56,6 +60,8 @@ async function runWorkflow(userId: number | string, date: Date) {
 			summary: answer.result.summary,
 		})
 		.execute()
+
+	await db.deleteFrom('mastra_threads').where('id', '=', threadId).execute()
 
 	return answer.result.summary
 }

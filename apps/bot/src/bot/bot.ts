@@ -3,6 +3,7 @@ import { Bot, type Context, GrammyError, HttpError } from 'grammy'
 import { env } from '../utils/parse-env'
 import { registerBotCommands } from './bot-commands'
 import { registerBotMiddleware } from './bot-middleware'
+
 import { generateAssistantResponse } from './generate-assistant-response'
 
 export type MyContext = Context & AutoChatActionFlavor

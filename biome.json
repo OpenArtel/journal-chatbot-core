@@ -20,7 +20,9 @@
 				"noUnusedImports": "info",
 				"noUnusedVariables": "info",
 				"noUnusedFunctionParameters": "info"
-
+			},
+			"nursery": {
+				"noFloatingPromises": "error"
 			}
 		}
 	},

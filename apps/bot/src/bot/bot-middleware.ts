@@ -36,7 +36,7 @@ export async function registerBotMiddleware(bot: Bot<MyContext>) {
 	// Ensure non-forwarded messages
 	bot.use(async (ctx, next) => {
 		const msg = ctx.message
-		if (!msg) return
+		if (!msg) return next()
 
 		const isForwarded =
 			'forward_date' in msg ||
@@ -56,7 +56,7 @@ export async function registerBotMiddleware(bot: Bot<MyContext>) {
 	// Ban non-text messages
 	bot.use(async (ctx, next) => {
 		const msg = ctx.message
-		if (!msg) return
+		if (!msg) return next()
 
 		const isSticker = 'sticker' in msg
 		if (isSticker) return

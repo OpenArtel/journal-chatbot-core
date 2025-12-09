@@ -4,8 +4,8 @@ import { generateTypes } from '../infra/database/generate-type'
 import { migrateToLatest } from '../infra/database/migrate'
 import { JobManager } from '../infra/queue/pg-boss'
 import { bot } from './bot/bot'
-import { conversationSummaryJob } from './bot/conversation-summary'
-import { conversationSummaryAggregatorJob } from './bot/conversations-summary-aggregator'
+import { conversationSummaryJob } from './bot/conversation-summary.job'
+import { conversationSummaryAggregatorJob } from './bot/conversations-summary-aggregator.job'
 import { env } from './utils/parse-env'
 
 async function main() {
@@ -35,9 +35,8 @@ async function main() {
 	})
 
 	process.on('SIGTERM', async () => {
-		// await stopPgBoss()
 		process.exit(0)
 	})
 }
 
-main()
+await main()

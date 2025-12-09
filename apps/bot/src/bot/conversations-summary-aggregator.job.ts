@@ -1,6 +1,6 @@
 import { db } from '../../infra/database/db'
 import { defineJob } from '../../infra/queue/pg-boss'
-import { conversationSummaryJob } from './conversation-summary'
+import { conversationSummaryJob } from './conversation-summary.job'
 
 export const conversationSummaryAggregatorJob = defineJob(
 	'conversation_summary_aggregator',
