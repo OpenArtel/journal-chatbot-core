@@ -5,6 +5,7 @@ import { registerBotCommands } from './bot-commands'
 import { registerBotMiddleware } from './bot-middleware'
 
 import { generateAssistantResponse } from './generate-assistant-response'
+import { getQuote } from './get-quote'
 
 export type MyContext = Context & AutoChatActionFlavor
 
@@ -21,7 +22,17 @@ bot.on(':text', async (ctx) => {
 	const text = ctx.message.text
 	const userId = ctx.message.from.id
 
-	const answer = await generateAssistantResponse(text, userId)
+	const { botQuote, userQuote } = getQuote(ctx)
+
+	const userMessage = [
+		botQuote && `ты писал > ${botQuote} \n`,
+		userQuote && `я писал > ${userQuote} \n`,
+		text,
+	]
+		.filter(Boolean)
+		.join('\n')
+
+	const answer = await generateAssistantResponse(userMessage, userId)
 
 	await ctx.reply(answer)
 })

@@ -53,6 +53,22 @@ export async function registerBotMiddleware(bot: Bot<MyContext>) {
 		return next()
 	})
 
+	// Ensure replied messages
+	bot.use(async (ctx, next) => {
+		const msg = ctx.message
+		if (!msg) return next()
+
+		const isReplied = 'reply_to_message' in msg
+		if (isReplied) {
+			await ctx.reply(
+				'Реплаи не работают. Используй цитаты, их я вижу и понимаю 👀',
+			)
+			return
+		}
+
+		return next()
+	})
+
 	// Ban non-text messages
 	bot.use(async (ctx, next) => {
 		const msg = ctx.message
