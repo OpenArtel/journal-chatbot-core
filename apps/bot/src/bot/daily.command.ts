@@ -26,10 +26,11 @@ function formatDate(date: Date) {
 	return format(date, 'd MMMM yyyy', { locale: ru })
 }
 
-async function fetchPageData(offset: number) {
+async function fetchPageData(offset: number, userId: string) {
 	const rows = await db
 		.selectFrom('daily_summary')
 		.selectAll()
+		.where('user_id', '=', userId)
 		.select(({ fn }) => fn.countAll().over().as('total_count'))
 		.orderBy('summary_date', 'desc')
 		.offset(offset)
@@ -56,10 +57,13 @@ function renderHeaderFromData(total: number, offset: number) {
 	const currentPage = Math.ceil((offset + 1) / PAGE_SIZE)
 	const lastPage = Math.ceil(total / PAGE_SIZE)
 
+	const isOnlyOnePage = lastPage === 1
+	if (isOnlyOnePage) return 'Список ваших итогов дня'
+
 	return [
 		'Список ваших итогов дня',
 		'',
-		`Страница ${currentPage} из ${lastPage}`,
+		isOnlyOnePage ? '' : `Страница ${currentPage} из ${lastPage}`,
 	].join('\n')
 }
 
@@ -98,17 +102,22 @@ function buildBackToListKeyboard(offset: number) {
 
 export async function dailySummaryMenu(bot: Bot<MyContext>) {
 	bot.command(DAILY_COMMAND_NAME, async (ctx) => {
-		const { items, total } = await fetchPageData(0)
+		if (!ctx.from) return
+		const userId = String(ctx.from.id)
+		const { items, total } = await fetchPageData(0, userId)
 		await ctx.reply(renderHeaderFromData(total, 0), {
 			reply_markup: buildListKeyboardFromData(items, total, 0),
 		})
 	})
 
 	bot.callbackQuery(CALLBACKS.PAGE_REGEX, async (ctx) => {
+		if (!ctx.from) return
+		const userId = String(ctx.from.id)
+
 		const offset = Number(ctx.match[1] ?? 0)
 		await ctx.answerCallbackQuery()
 
-		const { items, total } = await fetchPageData(offset)
+		const { items, total } = await fetchPageData(offset, userId)
 
 		// Если offset оказался невалидным
 		if (items.length === 0 && offset > 0) {
