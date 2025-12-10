@@ -28,5 +28,9 @@ export async function generateAssistantResponse(
 		.replace(/\*/g, '')
 		.replace(/\n /g, '\n')
 
+	if (formatedAnswer.length === 0) {
+		throw new Error("Assistant didn't respond")
+	}
+
 	return formatedAnswer
 }
