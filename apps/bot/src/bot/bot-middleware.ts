@@ -59,7 +59,9 @@ export async function registerBotMiddleware(bot: Bot<MyContext>) {
 		if (!msg) return next()
 
 		const isReplied = 'reply_to_message' in msg
-		if (isReplied) {
+		const isQuote = 'quote' in msg
+
+		if (isReplied && !isQuote) {
 			await ctx.reply(
 				'Реплаи не работают. Используй цитаты, их я вижу и понимаю 👀',
 			)

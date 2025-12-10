@@ -171,6 +171,13 @@ export interface MastraWorkflowSnapshot {
   workflow_name: string;
 }
 
+export interface MemoryMessages1024 {
+  embedding: string | null;
+  id: Generated<number>;
+  metadata: Generated<Json | null>;
+  vector_id: string;
+}
+
 export interface PgbossJob {
   completed_on: Timestamp | null;
   created_on: Generated<Timestamp>;
@@ -259,6 +266,7 @@ export interface DB {
   mastra_threads: MastraThreads;
   mastra_traces: MastraTraces;
   mastra_workflow_snapshot: MastraWorkflowSnapshot;
+  memory_messages_1024: MemoryMessages1024;
   "pgboss.job": PgbossJob;
   "pgboss.queue": PgbossQueue;
   "pgboss.schedule": PgbossSchedule;

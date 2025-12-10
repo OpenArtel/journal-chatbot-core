@@ -14,12 +14,18 @@ importers:
 
   apps/bot:
     dependencies:
+      '@grammyjs/auto-chat-action':
+        specifier: ^0.1.1
+        version: 0.1.1(grammy@1.38.4)
       '@grammyjs/ratelimiter':
         specifier: ^1.2.1
         version: 1.2.1
       '@mastra/client-js':
         specifier: ^0.16.15
         version: 0.16.15(zod@4.1.13)
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       grammy:
         specifier: ^1.38.4
         version: 1.38.4
@@ -41,7 +47,7 @@ importers:
     devDependencies:
       '@types/bun':
         specifier: latest
-        version: 1.3.3
+        version: 1.3.4
       kysely-codegen:
         specifier: ^0.19.0
         version: 0.19.0(kysely@0.28.8)(pg@8.16.3)(typescript@5.9.3)
@@ -67,8 +73,11 @@ importers:
         specifier: ^0.17.9
         version: 0.17.9(@mastra/core@0.24.6(openapi-types@12.1.3)(react@19.2.0)(zod@4.1.13))(pg-query-stream@4.10.3(pg@8.16.3))
       '@openrouter/ai-sdk-provider':
-        specifier: ^1.2.8
-        version: 1.2.8(ai@5.0.97(zod@4.1.13))(zod@4.1.13)
+        specifier: ^1.5.2
+        version: 1.5.2(ai@5.0.97(zod@4.1.13))(zod@4.1.13)
+      '@openrouter/sdk':
+        specifier: ^0.2.9
+        version: 0.2.9
       mastra:
         specifier: ^0.18.6
         version: 0.18.6(@mastra/core@0.24.6(openapi-types@12.1.3)(react@19.2.0)(zod@4.1.13))(@opentelemetry/api@1.9.0)(typescript@5.9.3)(zod@4.1.13)
@@ -545,6 +554,11 @@ packages:
   '@expo/sudo-prompt@9.3.2':
     resolution: {integrity: sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw==}
 
+  '@grammyjs/auto-chat-action@0.1.1':
+    resolution: {integrity: sha512-70Jdy+keIri4452tluaZpKtHag5gD8pNczoXqajsnsx7pJC5wg3DAQ5unpt0xJb8KsVBAGWuJb298SBl3TVecg==}
+    peerDependencies:
+      grammy: ^1.0.0
+
   '@grammyjs/ratelimiter@1.2.1':
     resolution: {integrity: sha512-4bmVUBCBnIb2epbDiBLCvvnVjaYg7kDCPR1Ptt6gqoxm5vlD8BjainYv+yjF6221hu2KUv8QAckumDI+6xyGsQ==}
 
@@ -741,15 +755,22 @@ packages:
       ai: ^5.0.0
       zod: ^3.24.1 || ^v4
 
-  '@openrouter/ai-sdk-provider@1.2.8':
-    resolution: {integrity: sha512-pQT8AzZBKg9f4bkt4doF486ZlhK0XjKkevrLkiqYgfh1Jplovieu28nK4Y+xy3sF18/mxjqh9/2y6jh01qzLrA==}
+  '@openrouter/ai-sdk-provider@1.5.2':
+    resolution: {integrity: sha512-3Th0vmJ9pjnwcPc2H1f59Mb0LFvwaREZAScfOQIpUxAHjZ7ZawVKDP27qgsteZPmMYqccNMy4r4Y3kgUnNcKAg==}
     engines: {node: '>=18'}
     peerDependencies:
+      '@toon-format/toon': ^2.0.0
       ai: ^5.0.0
       zod: ^3.24.1 || ^v4
+    peerDependenciesMeta:
+      '@toon-format/toon':
+        optional: true
 
   '@openrouter/sdk@0.1.27':
     resolution: {integrity: sha512-RH//L10bSmc81q25zAZudiI4kNkLgxF2E+WU42vghp3N6TEvZ6F0jK7uT3tOxkEn91gzmMw9YVmDENy7SJsajQ==}
+
+  '@openrouter/sdk@0.2.9':
+    resolution: {integrity: sha512-O3tu6PwoKzwYXCCT+azFneb0F1T6YcZUqlNVEFABWLOcBzdvsCfgW+GM3QKeBL9V0E1ZBjVy9yssavNjhphO6Q==}
 
   '@opentelemetry/api-logs@0.203.0':
     resolution: {integrity: sha512-9B9RU0H7Ya1Dx/Rkyc4stuBZSGVQF27WigitInx2QQoj6KUpEFYPKoWjdFTunJYxmXmh17HeBvbMa1EhGyPmqQ==}
@@ -1503,8 +1524,8 @@ packages:
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
-  '@types/bun@1.3.3':
-    resolution: {integrity: sha512-ogrKbJ2X5N0kWLLFKeytG0eHDleBYtngtlbu9cyBKFtNL3cnpDZkNdQj8flVf6WTZUX5ulI9AY1oa7ljhSrp+g==}
+  '@types/bun@1.3.4':
+    resolution: {integrity: sha512-EEPTKXHP+zKGPkhRLv+HI0UEX8/o+65hqARxLy8Ov5rIxMBPNTjeZww00CIihrIQGEQBYg+0roO5qOnS/7boGA==}
 
   '@types/bunyan@1.8.11':
     resolution: {integrity: sha512-758fRH7umIMk5qt5ELmRMff4mLDlN+xyYzC+dkPTdKwbSkJFvz6xwyScrytPU0QIBbRRwbiE8/BIg8bpajerNQ==}
@@ -1714,8 +1735,8 @@ packages:
   builtins@5.1.0:
     resolution: {integrity: sha512-SW9lzGTLvWTP1AY8xeAMZimqDrIaSdLQUcVr9DMef51niJ022Ri87SwRRKYm4A6iHfkPaiVUu/Duw2Wc4J7kKg==}
 
-  bun-types@1.3.3:
-    resolution: {integrity: sha512-z3Xwlg7j2l9JY27x5Qn3Wlyos8YAp0kKRlrePAOjgjMGS5IG6E7Jnlx736vH9UVI4wUICwwhC9anYL++XeOgTQ==}
+  bun-types@1.3.4:
+    resolution: {integrity: sha512-5ua817+BZPZOlNaRgGBpZJOSAQ9RQ17pkwPD0yR7CfJg+r8DgIILByFifDTa+IPDDxzf5VNhtNlcKqFzDgJvlQ==}
 
   bundle-name@4.1.0:
     resolution: {integrity: sha512-tjwM5exMg6BGRI+kNmTntNsvdZS1X8BFYS6tnJ2hdH0kVxM6/eVZ2xy+FqStSWvYmtfFMDLIxurorHwDKfDz5Q==}
@@ -1852,6 +1873,9 @@ packages:
 
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dateformat@4.6.3:
     resolution: {integrity: sha512-2P0p0pFGzHS5EMnhdxQi7aJN+iMheud0UhG4dlE1DLAlvL8JHjJJTX/CSm4JXwV0Ka5nGk3zC5mcb5bUQUxxMA==}
@@ -3809,6 +3833,10 @@ snapshots:
 
   '@expo/sudo-prompt@9.3.2': {}
 
+  '@grammyjs/auto-chat-action@0.1.1(grammy@1.38.4)':
+    dependencies:
+      grammy: 1.38.4
+
   '@grammyjs/ratelimiter@1.2.1': {}
 
   '@grammyjs/types@3.22.2': {}
@@ -3968,8 +3996,8 @@ snapshots:
       '@ai-sdk/ui-utils': 1.2.11(zod@4.1.13)
       '@ai-sdk/xai-v5': '@ai-sdk/xai@2.0.26(zod@4.1.13)'
       '@isaacs/ttlcache': 1.4.1
-      '@mastra/schema-compat': 0.11.8(ai@4.3.19(react@19.2.0)(zod@4.1.13))(zod@4.1.13)
-      '@openrouter/ai-sdk-provider-v5': '@openrouter/ai-sdk-provider@1.2.3(ai@4.3.19(react@19.2.0)(zod@4.1.13))(zod@4.1.13)'
+      '@mastra/schema-compat': 0.11.8(ai@4.3.19(zod@4.1.13))(zod@4.1.13)
+      '@openrouter/ai-sdk-provider-v5': '@openrouter/ai-sdk-provider@1.2.3(ai@4.3.19(zod@4.1.13))(zod@4.1.13)'
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/auto-instrumentations-node': 0.62.2(@opentelemetry/api@1.9.0)(@opentelemetry/core@2.2.0(@opentelemetry/api@1.9.0))
       '@opentelemetry/core': 2.2.0(@opentelemetry/api@1.9.0)
@@ -4084,7 +4112,7 @@ snapshots:
   '@mastra/memory@0.15.12(@mastra/core@0.24.6(openapi-types@12.1.3)(react@19.2.0)(zod@4.1.13))(react@19.2.0)(zod@4.1.13)':
     dependencies:
       '@mastra/core': 0.24.6(openapi-types@12.1.3)(react@19.2.0)(zod@4.1.13)
-      '@mastra/schema-compat': 0.11.8(ai@4.3.19(react@19.2.0)(zod@4.1.13))(zod@4.1.13)
+      '@mastra/schema-compat': 0.11.8(ai@4.3.19(zod@4.1.13))(zod@4.1.13)
       '@upstash/redis': 1.35.7
       ai: 4.3.19(react@19.2.0)(zod@4.1.13)
       ai-v5: ai@5.0.60(zod@4.1.13)
@@ -4113,7 +4141,7 @@ snapshots:
       - pg-native
       - pg-query-stream
 
-  '@mastra/schema-compat@0.11.8(ai@4.3.19(react@19.2.0)(zod@4.1.13))(zod@4.1.13)':
+  '@mastra/schema-compat@0.11.8(ai@4.3.19(zod@4.1.13))(zod@4.1.13)':
     dependencies:
       ai: 4.3.19(react@19.2.0)(zod@4.1.13)
       json-schema: 0.4.0
@@ -4143,19 +4171,23 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@openrouter/ai-sdk-provider@1.2.3(ai@4.3.19(react@19.2.0)(zod@4.1.13))(zod@4.1.13)':
+  '@openrouter/ai-sdk-provider@1.2.3(ai@4.3.19(zod@4.1.13))(zod@4.1.13)':
     dependencies:
       '@openrouter/sdk': 0.1.27
       ai: 4.3.19(react@19.2.0)(zod@4.1.13)
       zod: 4.1.13
 
-  '@openrouter/ai-sdk-provider@1.2.8(ai@5.0.97(zod@4.1.13))(zod@4.1.13)':
+  '@openrouter/ai-sdk-provider@1.5.2(ai@5.0.97(zod@4.1.13))(zod@4.1.13)':
     dependencies:
       '@openrouter/sdk': 0.1.27
       ai: 5.0.97(zod@4.1.13)
       zod: 4.1.13
 
   '@openrouter/sdk@0.1.27':
+    dependencies:
+      zod: 4.1.13
+
+  '@openrouter/sdk@0.2.9':
     dependencies:
       zod: 4.1.13
 
@@ -5056,9 +5088,9 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 24.10.1
 
-  '@types/bun@1.3.3':
+  '@types/bun@1.3.4':
     dependencies:
-      bun-types: 1.3.3
+      bun-types: 1.3.4
 
   '@types/bunyan@1.8.11':
     dependencies:
@@ -5304,7 +5336,7 @@ snapshots:
     dependencies:
       semver: 7.7.3
 
-  bun-types@1.3.3:
+  bun-types@1.3.4:
     dependencies:
       '@types/node': 24.10.1
 
@@ -5426,6 +5458,8 @@ snapshots:
   data-uri-to-buffer@4.0.1: {}
 
   date-fns@3.6.0: {}
+
+  date-fns@4.1.0: {}
 
   dateformat@4.6.3: {}
 

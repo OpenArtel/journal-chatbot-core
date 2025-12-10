@@ -61,7 +61,5 @@ async function runWorkflow(userId: number | string, date: Date) {
 		})
 		.execute()
 
-	await db.deleteFrom('mastra_threads').where('id', '=', threadId).execute()
-
 	return answer.result.summary
 }

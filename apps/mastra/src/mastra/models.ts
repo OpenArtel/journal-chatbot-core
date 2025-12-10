@@ -32,5 +32,13 @@ export const gptOss120 = (extraBody?: object) =>
 		},
 		reasoning: {
 			effort: 'low',
+			exclude: true,
+		},
+	})
+
+export const intfloatMultilingualE5 = () =>
+	openrouter.textEmbeddingModel('intfloat/multilingual-e5-large', {
+		provider: {
+			sort: 'price',
 		},
 	})
