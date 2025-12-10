@@ -12,8 +12,8 @@ import { START_COMMAND_NAME, startCommand } from './start.command'
 export const knownCommands = [
 	START_COMMAND_NAME,
 	DAILY_COMMAND_NAME,
-	'clear_day',
-	'test_day_summary',
+	'test_clear_day',
+	// 'test_day_summary',
 ]
 
 export async function registerBotCommands(bot: Bot<MyContext>) {
@@ -23,10 +23,10 @@ export async function registerBotCommands(bot: Bot<MyContext>) {
 			command: 'test_clear_day',
 			description: 'Очистить на сервере сообщения за этот день',
 		},
-		{
-			command: 'test_day_summary',
-			description: 'Получить итоги дня',
-		},
+		// {
+		// 	command: 'test_day_summary',
+		// 	description: 'Получить итоги дня',
+		// },
 	])
 
 	await dailySummaryMenu(bot)
@@ -41,12 +41,12 @@ export async function registerBotCommands(bot: Bot<MyContext>) {
 		await ctx.reply(result)
 	})
 
-	bot.command('test_day_summary', async (ctx) => {
-		if (!ctx.from) return
-		ctx.chatAction = 'typing'
+	// bot.command('test_day_summary', async (ctx) => {
+	// 	if (!ctx.from) return
+	// 	ctx.chatAction = 'typing'
 
-		await conversationSummaryJob.emit({ userId: ctx.from.id, date: new Date() })
+	// 	await conversationSummaryJob.emit({ userId: ctx.from.id, date: new Date() })
 
-		ctx.reply('Подождите, подвожу итоги дня...')
-	})
+	// 	ctx.reply('Подождите, подвожу итоги дня...')
+	// })
 }
