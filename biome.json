@@ -22,7 +22,8 @@
 				"noUnusedFunctionParameters": "info"
 			},
 			"nursery": {
-				"noFloatingPromises": "error"
+				"noFloatingPromises": "error",
+				"noMisusedPromises": "error"
 			}
 		}
 	},
