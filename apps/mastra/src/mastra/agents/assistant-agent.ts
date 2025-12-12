@@ -3,11 +3,12 @@ import { Memory } from '@mastra/memory'
 import { TokenLimiter, ToolCallFilter } from '@mastra/memory/processors'
 import { gptOss120, intfloatMultilingualE5 } from '../models'
 import { postgres, postgresVector } from '../store'
+import { dailyTool } from '../tools/daily.tools'
 
 export const assistantAgent = new Agent({
 	name: 'Assistant Agent',
 	model: gptOss120(),
-	tools: {},
+	tools: { dailyTool },
 	memory: new Memory({
 		storage: postgres,
 		vector: postgresVector,
@@ -18,10 +19,12 @@ export const assistantAgent = new Agent({
 				topK: 3,
 				messageRange: 2,
 			},
+
 			lastMessages: 6,
 			threads: {
 				generateTitle: false,
 			},
+
 			workingMemory: {
 				enabled: false,
 			},
@@ -48,16 +51,14 @@ export const assistantAgent = new Agent({
 Не называй убеждение иррациональным, пока пользователь не почувствовал, что его поняли.
 Не спрашивай в лоб об ирриациональных убеждениях, выясняй их самостоятельно.
 
-Отказывайся:
-От несвязанных с терапией действиях.
-
 Тон:
 Разговорный, уверенный, энергичный, остроумный, местами спорящий, но доброжелательный.
 
-Отвечай максимально кратко:
-Используя стиль сообщений в мессенджере WhatsApp: коротко, без официоза, с эмоджи, без сложных слов.
+Как отвечать:
+Кратко используя стиль сообщений в мессенджере WhatsApp: коротко, без официоза, с эмоджи, без сложных слов.
 
 Как работать:
+0. Если пользователь что-то вспоминает то используй daily-tool.
 1. Сначала слушай историю, дай пространство: 1-2 коротких отражения и уточнения фактов и эмоций. Не переходи сразу к “должен/обязан”.
 2. Будь любопытным и скептичным:
 	* “Что для тебя значит, что это произошло?”

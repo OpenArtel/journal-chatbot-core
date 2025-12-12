@@ -1,5 +1,6 @@
 import { createStep, createWorkflow } from '@mastra/core/workflows'
 import { z } from 'zod'
+import { dailyRagIngest } from '../store/dailyRag.store'
 
 const inputSchema = z.object({
 	threadId: z.string(),
@@ -51,6 +52,10 @@ export const messageSchema = z.discriminatedUnion('role', [
 
 type Message = z.infer<typeof messageSchema>
 
+const workflowStateSchema = z.object({
+	resourceId: z.string(),
+})
+
 const countMessages = createStep({
 	id: 'get-messages',
 	description: 'Counts the number of messages in the conversation',
@@ -58,7 +63,10 @@ const countMessages = createStep({
 	outputSchema: z.object({
 		messages: z.array(messageSchema),
 	}),
-	execute: async ({ inputData, mastra }) => {
+	stateSchema: workflowStateSchema,
+	execute: async ({ inputData, mastra, state, setState }) => {
+		setState({ ...state, resourceId: inputData.resourceId })
+
 		const agent = mastra.getAgent('assistantAgent')
 
 		const memory = await agent.getMemory()
@@ -89,6 +97,7 @@ const summary = createStep({
 		const agent = mastra.getAgent('conversationSummaryAgent')
 
 		const clearMessages = inputData.messages.map((message) => {
+			// спорный момент, что в саммари участвуют только сообщения пользователя
 			if (message.role !== 'user') return null
 
 			return message.content
@@ -113,6 +122,21 @@ const summary = createStep({
 	},
 })
 
+const saveToRag = createStep({
+	id: 'save-to-rag',
+	description: 'Saves the conversation summary to the RAG',
+	inputSchema: outputSchema,
+	outputSchema: outputSchema,
+	stateSchema: workflowStateSchema,
+	execute: async ({ inputData, state }) => {
+		dailyRagIngest({
+			resourceId: state.resourceId,
+			content: inputData.summary,
+		})
+		return inputData
+	},
+})
+
 const conversationSummaryWorkflow = createWorkflow({
 	id: 'conversation-summary-workflow',
 	inputSchema: inputSchema,
@@ -120,7 +144,7 @@ const conversationSummaryWorkflow = createWorkflow({
 })
 	.then(countMessages)
 	.then(summary)
-
-conversationSummaryWorkflow.commit()
+	.then(saveToRag)
+	.commit()
 
 export { conversationSummaryWorkflow }

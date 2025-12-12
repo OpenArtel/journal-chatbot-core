@@ -9,11 +9,16 @@ import {
 	translationScorer,
 } from './scorers/weather-scorer'
 import { conversationSummaryWorkflow } from './workflows/conversation-summary-workflow'
+import { ingestWorkflow } from './workflows/ingest-workflow'
+import { searchWorkflow } from './workflows/search-workflow'
 
 export const mastra = new Mastra({
 	server: { port: Number(process.env.MASTRA_PORT) || 3000, host: '0.0.0.0' },
+
 	agents: { assistantAgent, conversationSummaryAgent },
-	workflows: { conversationSummaryWorkflow },
+
+	workflows: { conversationSummaryWorkflow, ingestWorkflow, searchWorkflow },
+
 	scorers: {
 		toolCallAppropriatenessScorer,
 		completenessScorer,
