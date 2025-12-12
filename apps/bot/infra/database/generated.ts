@@ -27,14 +27,6 @@ export type PgbossJobState = "active" | "cancelled" | "completed" | "created" | 
 
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-export interface DailySummary {
-  created_at: Generated<Timestamp>;
-  id: Generated<string>;
-  summary: string;
-  summary_date: Timestamp;
-  user_id: string;
-}
-
 export interface MastraAiSpans {
   attributes: Json | null;
   createdAt: Timestamp;
@@ -257,7 +249,6 @@ export interface Users {
 }
 
 export interface DB {
-  daily_summary: DailySummary;
   mastra_ai_spans: MastraAiSpans;
   mastra_evals: MastraEvals;
   mastra_messages: MastraMessages;

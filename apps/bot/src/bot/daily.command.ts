@@ -4,8 +4,10 @@ import { type Bot, InlineKeyboard } from 'grammy'
 import type { BotCommand } from 'grammy/types'
 import type { Selectable } from 'kysely'
 import { db } from '../../infra/database/db'
-import type { DailySummary } from '../../infra/database/generated'
+import type { MastraMessages } from '../../infra/database/generated'
 import type { MyContext } from './bot'
+
+type Messages = Pick<Selectable<MastraMessages>, 'id' | 'createdAt'>[]
 
 export const DAILY_COMMAND_NAME = 'days'
 const PAGE_SIZE = 7
@@ -28,18 +30,19 @@ function formatDate(date: Date) {
 
 async function fetchPageData(offset: number, userId: string) {
 	const rows = await db
-		.selectFrom('daily_summary')
-		.selectAll()
-		.where('user_id', '=', userId)
+		.selectFrom('mastra_messages')
+		.select(['id', 'createdAt'])
+		.where('resourceId', '=', userId)
+		.where('thread_id', '=', `daily-${userId}`)
 		.select(({ fn }) => fn.countAll().over().as('total_count'))
-		.orderBy('summary_date', 'desc')
+		.orderBy('createdAt', 'desc')
 		.offset(offset)
 		.limit(PAGE_SIZE)
 		.execute()
 
 	const total = rows[0]?.total_count ?? 0
 	return {
-		items: rows as Selectable<DailySummary>[],
+		items: rows as Messages,
 		total: Number(total),
 	}
 }
@@ -68,17 +71,14 @@ function renderHeaderFromData(total: number, offset: number) {
 }
 
 function buildListKeyboardFromData(
-	items: Selectable<DailySummary>[],
+	items: Messages,
 	total: number,
 	offset: number,
 ) {
 	const kb = new InlineKeyboard()
 
 	for (const item of items) {
-		kb.text(
-			formatDate(item.summary_date),
-			CALLBACKS.item(item.id, offset),
-		).row()
+		kb.text(formatDate(item.createdAt), CALLBACKS.item(item.id, offset)).row()
 	}
 
 	if (total <= PAGE_SIZE) return kb
@@ -146,7 +146,7 @@ export async function dailySummaryMenu(bot: Bot<MyContext>) {
 		await ctx.answerCallbackQuery()
 
 		const item = await db
-			.selectFrom('daily_summary')
+			.selectFrom('mastra_messages')
 			.selectAll()
 			.where('id', '=', id)
 			.executeTakeFirst()
@@ -158,8 +158,11 @@ export async function dailySummaryMenu(bot: Bot<MyContext>) {
 			return
 		}
 
+		// на самом деле это json в mastra ai
+		const message = JSON.parse(item.content).content
+
 		await ctx.editMessageText(
-			[formatDate(item.summary_date), '', 'Итоги:', item.summary].join('\n'),
+			[formatDate(item.createdAt), '', 'Итоги:', message].join('\n'),
 			{ reply_markup: buildBackToListKeyboard(backOffset) },
 		)
 	})
