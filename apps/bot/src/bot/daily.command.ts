@@ -10,7 +10,7 @@ import type { MyContext } from './bot'
 export const DAILY_COMMAND_NAME = 'days'
 const PAGE_SIZE = 7
 
-export const dailyBotCommand: BotCommand = {
+export const dailyBotCommandDescription: BotCommand = {
 	command: DAILY_COMMAND_NAME,
 	description: 'Получить итоги дней',
 }

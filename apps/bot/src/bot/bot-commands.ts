@@ -1,10 +1,13 @@
 import type { Bot } from 'grammy'
 import type { MyContext } from './bot'
-import { clearCurrentDay } from './clear-current-day'
-import { conversationSummaryJob } from './conversation-summary.job'
+import {
+	CLEAR_CURRENT_DAY_COMMAND_NAME,
+	clearCurrentDayCommand,
+	clearCurrentDayCommandDescription,
+} from './clear-current-day'
 import {
 	DAILY_COMMAND_NAME,
-	dailyBotCommand,
+	dailyBotCommandDescription,
 	dailySummaryMenu,
 } from './daily.command'
 import { START_COMMAND_NAME, startCommand } from './start.command'
@@ -12,41 +15,16 @@ import { START_COMMAND_NAME, startCommand } from './start.command'
 export const knownCommands = [
 	START_COMMAND_NAME,
 	DAILY_COMMAND_NAME,
-	'test_clear_day',
-	// 'test_day_summary',
+	CLEAR_CURRENT_DAY_COMMAND_NAME,
 ]
 
 export async function registerBotCommands(bot: Bot<MyContext>) {
 	await bot.api.setMyCommands([
-		dailyBotCommand,
-		{
-			command: 'test_clear_day',
-			description: 'Очистить на сервере сообщения за этот день',
-		},
-		// {
-		// 	command: 'test_day_summary',
-		// 	description: 'Получить итоги дня',
-		// },
+		dailyBotCommandDescription,
+		clearCurrentDayCommandDescription,
 	])
 
 	await dailySummaryMenu(bot)
 	await startCommand(bot)
-
-	bot.command('test_clear_day', async (ctx) => {
-		if (!ctx.from) return
-
-		const userId = ctx.from.id
-		const result = await clearCurrentDay(userId)
-
-		await ctx.reply(result)
-	})
-
-	// bot.command('test_day_summary', async (ctx) => {
-	// 	if (!ctx.from) return
-	// 	ctx.chatAction = 'typing'
-
-	// 	await conversationSummaryJob.emit({ userId: ctx.from.id, date: new Date() })
-
-	// 	ctx.reply('Подождите, подвожу итоги дня...')
-	// })
+	await clearCurrentDayCommand(bot)
 }
