@@ -40,8 +40,6 @@ export const assistantBlockSchema = z.object({
 const assistantMessageSchema = baseMessageSchema.extend({
 	role: z.literal('assistant'),
 	content: z.array(assistantBlockSchema),
-	// опционально, если хочешь отдельное поле под reasoning в другой модели данных
-	providerMetadata: z.string().optional(),
 })
 
 export const messageSchema = z.discriminatedUnion('role', [
@@ -96,19 +94,25 @@ const summary = createStep({
 	execute: async ({ inputData, mastra }) => {
 		const agent = mastra.getAgent('conversationSummaryAgent')
 
-		const clearMessages = inputData.messages.map((message) => {
-			// спорный момент, что в саммари участвуют только сообщения пользователя
-			if (message.role !== 'user') return null
+		const clearMessages = inputData.messages
+			.map((message) => {
+				if (message.role === 'assistant') {
+					return `${message.role}: ${message.content}`
+				}
 
-			return message.content
-		})
+				if (message.role === 'user')
+					return `${message.role}: ${message.content}`
+
+				return null
+			})
+			.filter(Boolean)
 
 		// TODO: добавить обработку если сообщения не помещаются в контекстное окно
 		const answer = await agent.generate([
 			{
 				role: 'user',
 				content: `
-				ОБРАБОТАЙ ЭТИ СООБЩЕНИЯ ПОЛЬЗОВАТЕЛЯ:
+				ОБРАБОТАЙ ЭТИ СООБЩЕНИЯ С ПОЛЬЗОВАТЕЛЕМ:
 				${clearMessages.join('\n')}
 				`,
 			},
@@ -129,10 +133,11 @@ const saveToRag = createStep({
 	outputSchema: outputSchema,
 	stateSchema: workflowStateSchema,
 	execute: async ({ inputData, state }) => {
-		dailyRagIngest({
+		await dailyRagIngest({
 			resourceId: state.resourceId,
 			content: inputData.summary,
 		})
+
 		return inputData
 	},
 })

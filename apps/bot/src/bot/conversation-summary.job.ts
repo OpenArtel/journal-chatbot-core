@@ -8,7 +8,7 @@ import { bot } from './bot'
 
 export const conversationSummaryJob = defineJob('conversation_summary')
 	.input(z.object({ userId: z.number(), date: z.date() }))
-	.options({ retryLimit: 1 })
+	.options({ retryLimit: 0 })
 	.work(async ([job]) => {
 		if (!job) throw new Error('No job data provided')
 
@@ -50,16 +50,6 @@ async function runWorkflow(userId: number | string, date: Date) {
 	if (answer.status !== 'success' || !answer.result.summary) {
 		throw new Error('Workflow failed')
 	}
-
-	await db
-		.insertInto('daily_summary')
-		.values({
-			id: answer.result.id,
-			user_id: `${userId}`,
-			summary_date: date,
-			summary: answer.result.summary,
-		})
-		.execute()
 
 	return answer.result.summary
 }
